@@ -1,0 +1,64 @@
+<div layout="row" >
+    <div class="list">
+
+        <md-list class="anim-list">
+            <md-list-item style="margin:0 !important;padding:0 !important;">
+                <div class="title-container" ng-show="content">
+                    <div class="mag-title">
+                        {{content.metadata.title}}
+                    </div>
+                    <div ng-show="magNdate" class="list-detail">
+                        from {{startDate | date:"yyyy-MMM-dd" }} to {{endDate | date:"yyyy-MMM-dd"}},
+                        <br> magnitude {{minMagnitude}} to {{maxMagnitude}}
+                    </div>
+                    <div class="list-detail">
+                        {{filteredQuakes.length}} of {{quakes.length}} Earthquake on the list.
+                    </div>
+                    <md-divider></md-divider>
+                </div>
+            </md-list-item>
+        </md-list>
+        <!--<md-list ng-show="!filteredQuakes.length">-->
+            <!--<div class="no-data anim-list">-->
+                <!--<md-progress-circular ng-show="loading" class="md-40px" style="right:5% ">-->
+                <!--</md-progress-circular>-->
+                <!--<br>-->
+                <!--<br>-->
+                <!--<br> There is no data to show! wait till the data load fully-->
+            <!--</div>-->
+
+        <!--</md-list>-->
+
+
+
+        <!-- If not loading show content -->
+        <md-content class="_md flex">
+
+            <md-list>
+                <md-list-item class="md-2-line anim-list" ng-click="selectQuake(quake)" ng-repeat="quake in (filteredQuakes= (quakes | filter:search )) | orderBy:order" ng-class="{selected: quake.id == selectedQuake.id,
+                                           significant: quake.properties.sig >= 600,
+                                           sigSelected: quake.id == selectedQuake.id && quake.properties.sig >= 600}">
+                    <div class="md-list-item-text">
+                        <div class="quake">
+                            <div class="magnitude" type="number">{{quake.properties.mag | number: 1}}</div>
+                            <div class="location">{{quake.properties.place}} </div>
+                            <div class="time">
+                                {{quake.properties.time | date:'yyyy-MMM-dd HH:mm Z' :timezone}}
+                                <span>{{ quake.geometry.coordinates[2] }} Km</span>
+                            </div>
+                            <div class="nearest" ng-show="nearest[0].layer.feature.id == quake.id">This is the nearest earthquake from you</div>
+                        </div>
+                    </div>
+                    <!-- if this is the last list, dont show divider -->
+                    <md-divider ng-if="!$last"></md-divider>
+                </md-list-item>
+            </md-list>
+        </md-content>
+    </div>
+    <div class="map">
+        <div id="map">
+
+        </div>
+    </div>
+
+</div>

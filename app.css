@@ -1,0 +1,224 @@
+/* app css stylesheet */
+
+.hint {
+  position: absolute;
+  left: 2px;
+  right: auto;
+  bottom: 7px;
+  font-size: 12px;
+  line-height: 14px;
+  color: grey;
+}
+.quake {
+    line-height: normal !important;
+    padding: 0;
+}
+.quake .magnitude {
+    float: left;
+    font-size: 25px;
+    font-weight: 300;
+    margin-right: 10px;
+    margin-bottom: 5px;
+    color: #2B2B2B;
+}
+.quake .title {
+    color: #8b8b8b;
+    margin-bottom: 10px;
+}
+.quake .location {
+    color: #111;
+    font-size: 12px;
+}
+.quake .time {
+    color: #2B2B2B;
+    font-size: 10px;
+    margin-top: 5px;
+    font-weight: 300;
+}
+span.ng-binding {
+    float: right;
+}
+.quake .nearest {
+    color: red;
+    font-size: 12px;
+    font-weight: 300;
+    margin-top:5px;
+}
+
+.list {
+    margin: 0;
+    width: 25%;
+    top: 113px;
+    position: fixed;
+    bottom: 0;
+    overflow: auto;
+    border-right: 2px solid #dddddd;
+}
+.map {
+    margin-left: 25%;
+    width: 75%;
+    top: 113px;
+    position: fixed;
+    bottom: 0;
+    overflow: auto;
+}
+
+/* An Animation list */
+
+.anim-list.ng-enter, .anim-list.ng-move {
+    transition: 0.5s all;
+    opacity: 0;
+}
+.anim-list.ng-enter.ng-enter-active, .anim-list.ng-move.ng-move-active {
+    opacity: 1;
+}
+.anim-list.ng-leave {
+    animation: 0.5s fade_anim_list;
+}
+@keyframes fade_anim_list {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+.loading {
+    height: 100%;
+    position: relative;
+    z-index: 9 !important;
+}
+/*md-progress-circular {
+    z-index: 10 !important;
+    position: relative;
+    top: 45%;
+    left: 45%;
+}*/
+.detil-kiri {
+
+    overflow: auto;
+    width: 50%;
+    float: left;
+    margin-right: 10px;
+    padding: 0;
+
+}
+.detil-kanan {
+
+    overflow: auto;
+    margin-left: 50%;
+    padding: 0;
+}
+
+
+md-list {
+    z-index: 8 !important;
+    display: block;
+    padding: 0 !important;
+}
+.selected {
+    background: #AEAEAE;
+
+}
+.selected div {
+    color: white !important;
+}
+.significant div {
+    color: red !important;
+
+}
+.sigSelected div {
+    color: #fff !important;
+    font-weight: bold;
+}
+.sigSelected {
+    background-color: #ea7f7f !important;
+}
+#map {
+    height: 100%;
+}
+
+.mag-title {
+    font-size:18px;
+    font-weight: 300;
+    margin:15px 20px 10px 20px;
+
+}
+.list-detail {
+    margin: 10px 20px;
+    color: #F6EEEE;
+    font-weight: 200;
+    font-size: 13px;
+}
+.title-container {
+    width: 100%;
+    background-color: #607D8B;
+    color: #fff !important;
+}
+.loading{
+
+    z-index: 3 !important;
+    float: right;
+    margin: 0;
+    position: relative !important;
+    right: 43px;
+    top: 33px !important;
+}
+.no-data{
+    font-weight: 300;
+    font-size: 20px;
+    text-align: center;
+    margin: 40% 10px 20% 10px;
+}
+md-input-container{
+    top:12px !important;
+}
+md-nav-bar.md-default-theme.md-hue-2 .md-nav-bar, md-nav-bar.md-hue-2 .md-nav-bar{
+    background-color:#455A64 ;
+    color: #FFFFFF;
+}
+md-nav-bar.md-default-theme.md-hue-2 .md-button._md-nav-button.md-unselected, md-nav-bar.md-hue-2 .md-button._md-nav-button.md-unselected{
+    color:#CFD8DC
+}
+md-tabs-canvas{
+    background-color: #455A64;
+    color: #fff;;
+}
+md-tabs.md-default-theme.md-hue-2 .md-tab.md-active, md-tabs.md-hue-2 .md-tab.md-active, md-tabs.md-default-theme.md-hue-2 .md-tab.md-active md-icon, md-tabs.md-hue-2 .md-tab.md-active md-icon, md-tabs.md-default-theme.md-hue-2 .md-tab.md-focused, md-tabs.md-hue-2 .md-tab.md-focused, md-tabs.md-default-theme.md-hue-2 .md-tab.md-focused md-icon, md-tabs.md-hue-2 .md-tab.md-focused md-icon{
+    color: #fff !important;
+}
+md-tabs.md-default-theme.md-hue-2 .md-tab, md-tabs.md-hue-2 .md-tab{
+    color: #f4f4f4 !important;
+}
+md-card md-card-title{
+    padding: 0px 16px 16px !important;
+}
+.md-headline {
+    font-size: 20px !important;
+    font-weight: 300 !important;
+    line-height: 25px !important;
+}
+md-card md-card-content > p {
+    margin-top: 0;
+    font-size: 13px !important;
+    font-style: italic;
+}
+
+
+.fabSpeedDialdemoBasicUsage .text-capitalize {
+    text-transform: capitalize; }
+
+.fabSpeedDialdemoBasicUsage .md-fab:hover, .fabSpeedDialdemoBasicUsage .md-fab.md-focused {
+    background-color: #000 !important; }
+
+.fabSpeedDialdemoBasicUsage p.note {
+    font-size: 1.2rem; }
+
+.fabSpeedDialdemoBasicUsage .lock-size {
+    min-width: 300px;
+    min-height: 300px;
+    width: 300px;
+    height: 300px;
+    margin-left: auto;
+    margin-right: auto; }
+

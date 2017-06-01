@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>
+<html lang="en" ng-app="myApp" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>
+<html lang="en" ng-app="myApp" class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>
+<html lang="en" ng-app="myApp" class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html lang="en" ng-app="myApp" class="no-js"> <!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Earthquake Report App</title>
+    <meta name="description"
+          content=" an earthquake report with map and list, actually this is a clone of USGS earthquake map, build with angularjs and angular material">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="bower_components/html5-boilerplate/dist/css/normalize.css">
+    <link rel="stylesheet" href="bower_components/html5-boilerplate/dist/css/main.css">
+    <link rel="stylesheet" href="bower_components/angular-material/angular-material.min.css">
+    <link rel="stylesheet" href="bower_components/mdi/css/materialdesignicons.min.css">
+    <!-- Map stylesheet dependency -->
+    <link rel="stylesheet" href="leaflet/leaflet.css">
+    <link rel="stylesheet" href="leaflet/Leaflet.MousePosition-master/src/L.Control.MousePosition.css">
+    <!-- Map dependency -->
+
+
+    <link rel="stylesheet" href="app.css">
+
+    <script src="bower_components/html5-boilerplate/dist/js/vendor/modernizr-2.8.3.min.js"></script>
+    <!--<script src="bower_components/html5-boilerplate/dist/js/vendor/jquery-1.12.0.min.js"></script>-->
+
+    <!--<script type="text/javascript" src="https://www.google.com/jsapi"></script>-->
+
+
+
+</head>
+<body ng-app="myApp" ng-controller="appCtr" ng-cloak>
+
+
+<!--[if lt IE 7]>
+<p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade
+    your browser</a> to improve your experience.</p>
+<![endif]-->
+<md-sidenav class="md-sidenav-right md-whiteframe-4dp" md-component-id="right">
+
+    <md-toolbar class="md-theme-light">
+        <div class="md-toolbar-tools">
+            <h1>Menu</h1>
+            <span flex></span>
+            <md-button ng-click="toggleRight()" class="md-icon-button" aria-label="Favorite">
+                <md-icon class="mdi mdi-close mdi-24px"></md-icon>
+            </md-button>
+        </div>
+
+    </md-toolbar>
+    <md-content>
+        <md-tabs md-dynamic-height md-border-bottom class="md-hue-2">
+            <md-tab label="setting">
+                <md-content layout-padding>
+                    <form action="">
+                        <md-input-container class="md-block" flex-gt-sm>
+                            <label>Order By</label>
+                            <md-select ng-model="order">
+                                <md-option ng-repeat="order in orderEQ" value="{{order.value}}">{{order.show}}
+                                </md-option>
+                            </md-select>
+
+                        </md-input-container>
+                        <!--Select Timezone wheter local or UTC-->
+                        <md-input-container class="md-block" flex-gt-sm>
+                            <label>Timezone</label>
+                            <md-select ng-model="timezone">
+                                <md-option ng-repeat="timezone in timezones" value="{{timezone.value}}">
+                                    {{timezone.show}}
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
+                        <!--Choose an api to show-->
+                        <md-input-container class="md-block" flex-gt-sm>
+                            <label>Choose api</label>
+                            <md-select ng-model="apis" ng-change="fetchApi(apis)">
+                                <md-option ng-repeat="api in feedApi" value="{{api.url}}">{{api.title}}</md-option>
+                            </md-select>
+                        </md-input-container>
+                    </form>
+                </md-content>
+            </md-tab>
+            <md-tab label="search">
+                <md-content class="md-padding" layout-padding>
+                    <form action="">
+                        <md-input-container class="md-block" flex-gt-sm>
+                            <label>Minimal Magnitude</label>
+                            <input required ng-model="minMagnitude" type="number" step="0.1">
+                            <div class="hint">Limit the minimum Magnitude to show</div>
+                        </md-input-container>
+                        <md-input-container class="md-block" flex-gt-sm>
+                            <label>Maximal Magnitude</label>
+                            <input name='max' required ng-model="maxMagnitude" type="number" step="0.5">
+                            <div class="hint">Limit the maximum Magnitude to show</div>
+                        </md-input-container>
+                        <md-datepicker required ng-model="startDate" md-open-on-focus md-placeholder="Start Date"
+                                       md-max-date="maxDate"></md-datepicker>
+                        <md-datepicker required ng-model="endDate" md-open-on-focus md-placeholder="End Date"
+                                       md-max-date="nowDate"></md-datepicker>
+                        <md-input-container class="layout-align-md-center" layout="center center">
+                            <md-button ng-disabled="searchForm.$invalid"
+                                       ng-click="searchEarthq(startDate.toISOString(),endDate.toISOString(),minMagnitude,maxMagnitude) "
+                                       class="md-primary" layout-align="center">
+                                Submit
+                            </md-button>
+                        </md-input-container>
+                    </form>
+                </md-content>
+            </md-tab>
+            <md-tab label="about">
+                <md-content class="md-padding" layout-padding>
+                    <p>Earthquake report is a clone of USGS earthquake map build with angularjs and angular-material
+                        all the API is from the USGS data api at <a
+                                href="http://earthquake.usgs.gov/earthquakes/feed/v1.0/">http://earthquake.usgs.gov/earthquakes/feed/v1.0/</a>
+                    </p>
+                </md-content>
+            </md-tab>
+
+        </md-tabs>
+
+    </md-content>
+
+</md-sidenav>
+<header>
+    <md-content>
+        <md-toolbar ng-show="!showSearch">
+            <div class="md-toolbar-tools">
+                <a href="/"><h2>Earthquake Report</h2></a>
+                <span flex></span>
+                <md-button ng-click="showSearch = !showSearch" class="md-icon-button" aria-label="Search">
+                    <md-icon class="mdi mdi-magnify mdi-24px"></md-icon>
+                </md-button>
+
+
+                <md-button ng-click="toggleRight()" class="md-icon-button" aria-label="Favorite">
+                    <md-icon class="mdi mdi-menu mdi-24px"></md-icon>
+                </md-button>
+
+            </div>
+        </md-toolbar>
+        <md-toolbar ng-show="showSearch">
+            <div class="md-toolbar-tools">
+                <md-button class="md-icon-button" ng-click="showSearch = !showSearch" aria-label="Back">
+                    <md-icon class="mdi mdi-24px mdi-arrow-left"></md-icon>
+                </md-button>
+                <h3 flex="20">
+                    Back
+                </h3>
+
+                <md-input-container flex>
+                    <label>&nbsp;</label>
+                    <input ng-model="search" placeholder="Enter your search">
+                </md-input-container>
+
+
+                <md-button class="md-icon-button" aria-label="Search" ng-click="showSearch = !showSearch">
+                    <md-icon class="mdi mdi-magnify mdi-24px"></md-icon>
+                </md-button>
+                <md-button ng-click="toggleRight()" class="md-icon-button" aria-label="Open Menu">
+                    <md-icon class="mdi mdi-menu mdi-24px"></md-icon>
+                </md-button>
+            </div>
+
+        </md-toolbar>
+        <md-nav-bar md-selected-nav-item="currentNavItem" nav-bar-aria-label="navigation links" class="md-hue-2">
+            <md-nav-item md-nav-href="#!/map" name="map">
+                <!--<md-icon class="mdi mdi-map mdi-24px"></md-icon>-->
+                Map
+            </md-nav-item>
+            <!--<md-nav-item md-nav-href="#!/event" name="event">-->
+                <!--<md-icon class="mdi mdi-timer mdi-24px"></md-icon>-->
+                <!--Detail-->
+            <!--</md-nav-item>-->
+            <md-nav-item md-nav-href="#!/news" name="news">
+                <!--<md-icon class="mdi mdi-newspaper mdi-24px"></md-icon>-->
+                News
+            </md-nav-item>
+
+            <!-- these require actual routing with ui-router or ng-route, so they won't work in the demo
+            <md-nav-item md-nav-sref="app.page4" name="page4">Page Four</md-nav-item>
+            <md-nav-item md-nav-href="#page5" name="page5">Page Five</md-nav-item>
+            -->
+        </md-nav-bar>
+
+    </md-content>
+
+</header>
+<main layout="column">
+    <ng-view></ng-view>
+</main>
+
+
+<!-- In production use:
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/x.x.x/angular.min.js"></script>
+-->
+<script src="leaflet/leaflet.js"></script>
+<script src="leaflet/leaflet.bouncemarker-master/bouncemarker.js"></script>
+<script src='leaflet/Leaflet.MousePosition-master/src/L.Control.MousePosition.js'></script>
+<script src="bower_components/angular/angular.js"></script>
+<script src="bower_components/angular-route/angular-route.js"></script>
+<script src="bower_components/angular-material/angular-material.min.js"></script>
+<script src="bower_components/angular-animate/angular-animate.min.js"></script>
+<script src="bower_components/angular-aria/angular-aria.min.js"></script>
+<script src="bower_components/angular-messages/angular-messages.min.js"></script>
+<script src="app.js"></script>
+<script src="app.theme.js"></script>
+<script src="map/map.js"></script>
+<script src="news/news.js"></script>
+<script src="about/about.js"></script>
+<script src="components/version/version.js"></script>
+<script src="components/version/version-directive.js"></script>
+<script src="components/version/interpolate-filter.js"></script>
+</body>
+</html>

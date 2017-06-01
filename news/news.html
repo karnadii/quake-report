@@ -1,0 +1,43 @@
+
+    <md-content class="md-padding" layout-xs="column" layout="row" layout-wrap>
+
+        <div class="anim-list" flex-xs flex-gt-xs="25" layout="column"
+        ng-repeat="feed in feeds | filter:search "
+        >
+            <md-card class="md-whiteframe-12dp">
+                <!--<img ng-src="{{'http://placehold.it/200x130'}}" class="md-card-image">-->
+                <md-card-header>
+                    <md-card-avatar>
+                        <md-icon class="mdi mdi-24px mdi-account"></md-icon>
+                    </md-card-avatar>
+                    <md-card-header-text>
+                        <span class="md-title">{{feed.author}}r</span>
+                        <span class="md-subhead">{{feed.publishedDate | limitTo:16}}<span>
+                    </md-card-header-text>
+                </md-card-header>
+                <md-card-title>
+                    <md-card-title-text>
+                        <span class="md-headline">{{feed.title}}</span>
+                    </md-card-title-text>
+                </md-card-title>
+                <md-card-content>
+                    <p>
+                        {{feed.contentSnippet}}
+                    </p>
+
+                </md-card-content>
+                <md-divider></md-divider>
+                <md-card-actions layout="row" layout-align="end center">
+                    <md-button target="_blank" href="{{feed.link}}">Read More</md-button>
+                    <span flex></span>
+                    <md-button class="md-icon-button">
+                        <md-icon class="mdi mdi-24px mdi-share-variant"></md-icon>
+                    </md-button>
+                </md-card-actions>
+            </md-card>
+            </div>
+
+
+    </md-content>
+
+
